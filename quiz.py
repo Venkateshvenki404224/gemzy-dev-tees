@@ -34,26 +34,36 @@ QUESTIONS = [
             ("Cry, then fix it, then cry again", "c"),
         ],
     ),
+    (
+        "Your relationship with AI-assisted coding:",
+        [
+            ("I ask it to write the whole thing and pray", "vibe"),
+            ("I use it for boilerplate, I write the logic", "b"),
+            ("I read the output line by line before I run it", "c"),
+        ],
+    ),
 ]
 
 RESULTS = {
-    "a": ("Terminal Debugger", "ready to deploy, always. https://gemzy.co.in/en/products/terminal-debugger-black"),
-    "b": ("Chai Pe Charcha", "chill, discusses architecture over chai. Coming soon on gemzy.co.in"),
-    "c": ("It Works on My Machine", "chaotic but honest. Coming soon on gemzy.co.in"),
+    "a": ("Terminal Debugger", "ready to deploy, always.", "https://gemzy.co.in/en/products/terminal-debugger-black"),
+    "b": ("Code Trust The Process", "you know what you're doing, you're just not sure if the code does.", "https://gemzy.co.in/en/products/code-trust-the-process-white"),
+    "c": ("It Works on My Machine", "chaotic but honest. Proven correct 100% of the time on your machine.", "https://gemzy.co.in/en/products/it-works-on-my-machine-black"),
+    "vibe": ("ERROR 404: Sleep Not Found", "you shipped at 2am and you'll do it again.", "https://gemzy.co.in/en/products/error-404-sleep-not-found-black"),
 }
 
 
 def ask(question, options):
     print(f"\n{question}")
     for i, (opt_text, tag) in enumerate(options):
-        label = "abc"[i]
+        label = "abcde"[i]
         print(f"   {label}) {opt_text}")
+    valid = ["abcde"[i] for i in range(len(options))]
     while True:
         choice = input("> ").strip().lower()
-        for i, (opt_text, tag) in enumerate(options):
-            if choice == "abc"[i]:
-                return tag
-        print("Pick a, b, or c.")
+        if choice in valid:
+            _, tag = options["abcde".index(choice)]
+            return tag
+        print(f"Pick {'/'.join(valid)}.")
 
 
 def main():
@@ -65,15 +75,16 @@ def main():
     for question, options in QUESTIONS:
         answers.append(ask(question, options))
 
-    tally = {"a": 0, "b": 0, "c": 0}
+    tally = {}
     for a in answers:
-        tally[a] += 1
+        tally[a] = tally.get(a, 0) + 1
     winner = max(tally, key=lambda k: tally[k])
 
-    name, desc = RESULTS[winner]
+    name, desc, link = RESULTS[winner]
     print("\n" + "=" * 50)
     print(f"You are: {name}")
     print(desc)
+    print(link)
     print("=" * 50)
 
 
